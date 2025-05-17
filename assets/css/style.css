@@ -62,6 +62,12 @@ address {
   --animation-duration-long: 500ms;
   --ff-primary: "Raleway", sans-serif;
 }
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --animation-duration: 0ms;
+    --animation-duration-long: 0ms;
+  }
+}
 
 *:focus-visible {
   outline: 2px solid var(--clr-primary);
@@ -153,7 +159,7 @@ dialog {
   margin: auto;
   padding: 50px var(--space-3);
   --icon-offset: var(--space-3);
-  position: relative;
+  position: fixed;
   overflow: hidden;
   max-height: 100%;
   height: fit-content;
@@ -164,10 +170,29 @@ dialog {
   -webkit-transition: var(--animation-duration) ease-in-out;
   transition: var(--animation-duration) ease-in-out;
 }
+
 dialog::backdrop {
   background-color: rgba(0, 0, 0, 0.5);
   -webkit-transition: var(--animation-duration) ease-in-out;
   transition: var(--animation-duration) ease-in-out;
+}
+dialog {
+  -webkit-animation: Dialog var(--animation-duration) ease-in-out forwards;
+  animation: Dialog var(--animation-duration) ease-in-out forwards;
+}
+dialog::backdrop {
+  -webkit-animation: DialogBackdrop var(--animation-duration) ease-in-out
+    forwards;
+  animation: DialogBackdrop var(--animation-duration) ease-in-out forwards;
+}
+
+dialog.closing::backdrop {
+  -webkit-animation-name: DialogBackdropClose;
+  animation-name: DialogBackdropClose;
+}
+dialog.closing {
+  -webkit-animation-name: DialogClose;
+  animation-name: DialogClose;
 }
 
 dialog .modal-close {
@@ -200,6 +225,7 @@ dialog .modal-close:is(:hover, :focus-within, :active) {
 
 .page_title {
   font-size: var(--fz-title);
+  text-align: center;
 }
 
 .Logo {
@@ -402,4 +428,55 @@ form .form--submit:is(:hover, :focus-within) {
 #callback-modal.final .section--title:not(.title-final),
 #callback-modal.final .form-callback {
   display: none;
+}
+
+@media screen and (max-width: 400px) {
+  dialog {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    border-radius: 0;
+  }
+}
+
+@keyframes DialogBackdrop {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes DialogBackdropClose {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes Dialog {
+  from {
+    opacity: 0;
+    -webkit-transform: scale(0.7);
+    transform: scale(0.7);
+  }
+  to {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+}
+@keyframes DialogClose {
+  from {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    -webkit-transform: scale(0.7);
+    transform: scale(0.7);
+  }
 }

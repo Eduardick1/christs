@@ -4,7 +4,20 @@ function openModal(modalID) {
   document.getElementById(modalID).showModal();
 }
 function closeModal(modalID) {
-  document.getElementById(modalID).close();
+  const closingClassName = "closing";
+  const modal = document.getElementById(modalID);
+  Promise.race([
+    new Promise((resolve) =>
+      modal.addEventListener("animationend", () => resolve(), {
+        once: true,
+      })
+    ),
+    new Promise((resolve) => setTimeout(() => resolve(), 2000)),
+  ]).then(() => {
+    modal.close();
+    modal.classList.remove(closingClassName);
+  });
+  modal.classList.add(closingClassName);
 }
 
 document.addEventListener("click", (e) => {
